@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>
+Messaging System
+</title>
+<link rel="stylesheet" type="text/css" href="css/main.css">
+
+</head>
+
+<body>
+<div class="chat">
+	<input type="text" class="chat-name" placeholder="Enter your name">
+	<div class="chat-messages">
+  
+
+
+
+	</div>
+	<textarea class="chat-textarea" placeholder="Type your message"></textarea>
+    <div class="chat-status"><b>Status</b>: <span><i>Idle</i></b></span></div>
+	</div>
+	<script type="text/javascript" src="127.0.0.1:3000/socket.io/socket.io.js"></script>
+
+	<script type="text/javascript">
+    (function(){
+      var getNode = function(s){
+       return document.querySelector(s);
+
+     },
+     status = getNode('.chat-status span')
+     textarea = getNode('.chat-textarea'),
+     chatName = getNode('.chat-name');
+  
+      statusDefault = status.textContent,
+    setStatus = function(){
+     status.textContent = s;
+
+     if(s !== statusDefault){
+     	var delay = setTimeout(function){
+            setStatus(statusDefault);
+            clearInterval(delay);
+     	},3000);
+     }
+    };
+
+//setStatus('Checking for connection...');
+    //console.log(statusDefault);
+  try{
+  var socket = io.connect('http://127.0.0.1:3000');
+ } catch(e){
+
+ }
+if(socket !== undefined){
+
+	socket.on('output',function)
+	//console.log('okay!');
+socket.on('status',function(data){
+   setStatus((typeof data === 'object') ? data.message : data);
+if(data.clear === true){
+	textarea.value = '';
+}
+
+});
+
+     textarea.addEventListener('keydown', function(event){
+      var self = this;
+      name= chatName.value;
+
+     // console.log(event.which);
+     if(event.which === 13 && event.shiftKey === false){
+       //console.log('Sent!');
+    socket.emit('input',{
+    	name: name,
+    	message:self.value
+
+    });
+    event.preventDefault();
+
+     }
+
+     });
+}
+
+    })(); 
+
+
+
+
+
+	</script>
+</body>
+
+</html>
